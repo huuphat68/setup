@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phát VPS - Setup</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+      background: #f4f8ff;
+    }
+
+    .box {
+      width: 90%;
+      max-width: 400px;
+      background: white;
+      padding: 30px;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px rgba(0,0,0,.12);
+      text-align: center;
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      font-size: 16px;
+      margin: 10px 0;
+    }
+
+    button, .download {
+      width: 100%;
+      display: block;
+      padding: 14px;
+      margin-top: 10px;
+      border: 0;
+      border-radius: 10px;
+      background: #1677ff;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    button:hover, .download:hover {
+      opacity: .9;
+    }
+
+    #setup {
+      display: none;
+    }
+
+    #error {
+      color: red;
+      min-height: 20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="box">
+
+  <div id="login">
+    <h1>PHÁT VPS</h1>
+    <p>Nhập key để truy cập bộ Setup</p>
+
+    <input
+      type="password"
+      id="key"
+      placeholder="Nhập key"
+      onkeydown="if(event.key==='Enter') login()"
+    >
+
+    <button onclick="login()">ĐĂNG NHẬP</button>
+
+    <p id="error"></p>
+  </div>
+
+
+  <div id="setup">
+    <h1>SETUP VPS</h1>
+
+    <p>Bộ Setup VPS mới nhất</p>
+
+    <a
+      class="download"
+      href="https://github.com/huuphat68/setup/releases/latest/download/Setup.VPS.zip">
+      ⬇ TẢI SETUP VPS
+    </a>
+
+    <p style="font-size:13px;color:#777;margin-top:18px;">
+      Hữu Phát VPS
+    </p>
+  </div>
+
+</div>
+
+
+<script>
+
+const SECRET_KEY = "PHATVPS2026";
+
+function login() {
+
+  const key = document.getElementById("key").value;
+
+  if (key === SECRET_KEY) {
+
+    document.getElementById("login").style.display = "none";
+    document.getElementById("setup").style.display = "block";
+
+  } else {
+
+    document.getElementById("error").innerText = "Key không đúng";
+
+  }
+}
+
+</script>
+
+</body>
+</html>
