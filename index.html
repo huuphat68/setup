@@ -4,22 +4,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Phát VPS - Setup</title>
 
   <style>
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       min-height: 100vh;
-
       display: flex;
       align-items: center;
       justify-content: center;
-
       font-family: Arial, sans-serif;
       background: #f4f8ff;
     }
@@ -27,15 +22,10 @@
     .box {
       width: 90%;
       max-width: 400px;
-
       background: white;
-
       padding: 30px;
-
       border-radius: 18px;
-
-      box-shadow: 0 8px 30px rgba(0, 0, 0, .12);
-
+      box-shadow: 0 8px 30px rgba(0,0,0,.12);
       text-align: center;
     }
 
@@ -45,43 +35,29 @@
 
     input {
       width: 100%;
-
       padding: 14px;
-
       border: 1px solid #ccc;
       border-radius: 10px;
-
       font-size: 16px;
-
       margin: 10px 0;
     }
 
-    button,
-    .download {
+    button, .download {
       width: 100%;
-
       display: block;
-
       padding: 14px;
-
       margin-top: 10px;
-
       border: 0;
       border-radius: 10px;
-
       background: #1677ff;
       color: white;
-
       font-size: 16px;
       font-weight: bold;
-
       cursor: pointer;
-
       text-decoration: none;
     }
 
-    button:hover,
-    .download:hover {
+    button:hover, .download:hover {
       opacity: .9;
     }
 
@@ -95,105 +71,97 @@
     }
 
     .note {
-      margin-top: 16px;
-
       font-size: 13px;
-
       color: #777;
-
+      margin-top: 18px;
       line-height: 1.5;
     }
   </style>
 </head>
 
-
 <body>
 
-  <div class="box">
+<div class="box">
 
-    <!-- ========================= -->
-    <!-- ĐĂNG NHẬP -->
-    <!-- ========================= -->
+  <div id="login">
 
-    <div id="login">
+    <h1>PHÁT VPS</h1>
 
-      <h1>PHÁT VPS</h1>
+    <p>Nhập key để truy cập bộ Setup</p>
 
-      <p>Nhập key để truy cập bộ Setup</p>
+    <input
+      type="password"
+      id="key"
+      placeholder="Nhập key"
+      onkeydown="if(event.key==='Enter') login()"
+    >
 
-      <input
-        type="password"
-        id="key"
-        placeholder="Nhập key"
-        onkeydown="if(event.key === 'Enter') login()"
-      >
+    <button onclick="login()">
+      ĐĂNG NHẬP
+    </button>
 
-      <button onclick="login()">
-        ĐĂNG NHẬP
-      </button>
-
-      <p id="error"></p>
-
-    </div>
-
-
-    <!-- ========================= -->
-    <!-- SETUP -->
-    <!-- ========================= -->
-
-    <div id="setup">
-
-      <h1>SETUP VPS</h1>
-
-      <p>Cài đặt PHÁT VPS tự động</p>
-
-      <a
-        class="download"
-        href="setup.bat"
-        download
-      >
-        ⚡ TẢI AUTO SETUP
-      </a>
-
-      <p class="note">
-        Tải file về Desktop và chạy <b>setup.bat</b>
-        <br>
-        Hệ thống sẽ tự động cài đặt.
-      </p>
-
-      <p style="font-size:13px;color:#777;margin-top:20px;">
-        Hữu Phát VPS
-      </p>
-
-    </div>
+    <p id="error"></p>
 
   </div>
 
 
-  <script>
+  <div id="setup">
 
-    const SECRET_KEY = "Huuphatvps1";
+    <h1>SETUP VPS</h1>
 
-    function login() {
+    <p>Tải 2 file về Desktop</p>
 
-      const key = document.getElementById("key").value;
+    <a
+      class="download"
+      href="https://github.com/huuphat68/setup/releases/latest/download/Setup.zip"
+    >
+      ① TẢI SETUP.ZIP
+    </a>
 
-      if (key === SECRET_KEY) {
+    <a
+      class="download"
+      href="AUTO_SETUP.bat"
+      download
+    >
+      ② TẢI AUTO SETUP
+    </a>
 
-        document.getElementById("login").style.display = "none";
+    <p class="note">
+      Sau khi tải đủ 2 file<br>
+      chạy <b>AUTO_SETUP.bat</b>
+    </p>
 
-        document.getElementById("setup").style.display = "block";
+    <p class="note">
+      Hữu Phát VPS
+    </p>
 
-      } else {
+  </div>
 
-        document.getElementById("error").innerText = "Key không đúng";
+</div>
 
-      }
 
-    }
+<script>
 
-  </script>
+const SECRET_KEY = "Huuphatvps1";
+
+function login() {
+
+  const key = document.getElementById("key").value;
+
+  if (key === SECRET_KEY) {
+
+    document.getElementById("login").style.display = "none";
+    document.getElementById("setup").style.display = "block";
+
+  } else {
+
+    document.getElementById("error").innerText = "Key không đúng";
+
+  }
+
+}
+
+</script>
 
 </body>
-
 </html>
