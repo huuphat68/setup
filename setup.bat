@@ -22,13 +22,11 @@ echo [1/6] Dang tai bo PHAT VPS...
 echo.
 
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-"[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -UseBasicParsing -Uri '%URL%' -OutFile '%ZIP%'"
+"[Net.ServicePointManager]::SecurityProtocol=[Net.SecurityProtocolType]::Tls12; Invoke-WebRequest -UseBasicParsing -Uri '%URL%' -OutFile '%ZIP%'"
 
 if errorlevel 1 (
     echo.
     echo [LOI] Khong tai duoc Setup.zip.
-    echo Kiem tra ket noi Internet roi thu lai.
-    echo.
     pause
     exit /b 1
 )
@@ -37,35 +35,33 @@ echo Tai Setup.zip thanh cong!
 echo.
 
 :: ============================================
-:: 2. GIAI NEN RA DESKTOP
+:: 2. GIAI NEN - HO TRO WINDOWS SERVER 2012 R2
 :: ============================================
 
 echo [2/6] Dang giai nen ra Desktop...
 echo.
 
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-"Expand-Archive -LiteralPath '%ZIP%' -DestinationPath '%DESKTOP%' -Force"
+"Add-Type -AssemblyName System.IO.Compression.FileSystem; [System.IO.Compression.ZipFile]::ExtractToDirectory('%ZIP%','%DESKTOP%')"
 
 if errorlevel 1 (
     echo.
     echo [LOI] Khong the giai nen Setup.zip.
-    echo.
     pause
     exit /b 1
 )
 
-:: Xoa ZIP tam
 del /f /q "%ZIP%" >nul 2>&1
 
 :: ============================================
-:: 3. UNBLOCK FILE
+:: 3. BO SECURITY WARNING
 :: ============================================
 
 echo [3/6] Dang xu ly file...
 echo.
 
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-"Get-ChildItem -LiteralPath '%DESKTOP%' -Recurse -ErrorAction SilentlyContinue | Unblock-File -ErrorAction SilentlyContinue"
+"Get-ChildItem '%DESKTOP%' -Recurse | ForEach-Object { Remove-Item ($_.FullName + ':Zone.Identifier') -Force -ErrorAction SilentlyContinue }"
 
 :: ============================================
 :: 4. CAI JAVA SILENT
@@ -99,8 +95,6 @@ echo Dang dat wallpaper PHAT VPS...
 if exist "%DESKTOP%\Wall.png" (
     powershell -NoProfile -ExecutionPolicy Bypass -Command ^
     "$wall='%DESKTOP%\Wall.png'; Set-ItemProperty -Path 'HKCU:\Control Panel\Desktop' -Name Wallpaper -Value $wall; rundll32.exe user32.dll,UpdatePerUserSystemParameters"
-) else (
-    echo [CANH BAO] Khong tim thay Wall.png.
 )
 
 :: ============================================
