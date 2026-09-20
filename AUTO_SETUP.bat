@@ -68,18 +68,19 @@ echo [OK] Da dua tat ca file ra Desktop.
 echo.
 
 :: ==============================
-:: INSTALL JAVA
+:: INSTALL JAVA SILENT
 :: ==============================
 
 echo [2/3] Dang cai Java...
 
 if exist "%DESKTOP%\Java.exe" (
-
     echo [OK] Tim thay Java.exe
-    start /wait "" "%DESKTOP%\Java.exe"
+    echo Dang cai Java ngam...
 
+    start /wait "" "%DESKTOP%\Java.exe" /s
+
+    echo [OK] Cai Java hoan tat.
 ) else (
-
     echo [WARNING] Khong tim thay Java.exe
 )
 
