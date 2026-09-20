@@ -3,27 +3,18 @@ title PHATVPS - AUTO SETUP
 chcp 65001 >nul
 setlocal
 
-:: ==============================
-:: PATH
-:: ==============================
-
 set "ZIP=%USERPROFILE%\Downloads\Setup.zip"
 set "DESKTOP=%USERPROFILE%\Desktop"
 
 cls
-
 echo ==========================================
 echo           PHATVPS - AUTO SETUP
 echo ==========================================
 echo.
 
-:: ==============================
 :: CHECK ZIP
-:: ==============================
-
 if not exist "%ZIP%" (
-    echo [ERROR] Khong tim thay Setup.zip trong Downloads.
-    echo.
+    echo [ERROR] Khong tim thay Setup.zip
     pause
     exit /b 1
 )
@@ -32,13 +23,13 @@ echo [OK] Da tim thay Setup.zip
 echo.
 
 :: ==============================
-:: EXTRACT TO DESKTOP
+:: EXTRACT
 :: ==============================
 
 echo [1/3] Dang giai nen ra Desktop...
 
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-"Expand-Archive -LiteralPath '%ZIP%' -DestinationPath '%DESKTOP%' -Force"
+"Add-Type -AssemblyName System.IO.Compression.FileSystem; [System.IO.Compression.ZipFile]::ExtractToDirectory('%ZIP%', '%DESKTOP%')"
 
 if errorlevel 1 (
     echo.
@@ -51,54 +42,42 @@ echo [OK] Giai nen thanh cong.
 echo.
 
 :: ==============================
-:: FIND AND RUN JAVA
+:: JAVA
 :: ==============================
 
-echo [2/3] Dang tim java.exe...
-
-set "JAVA_FOUND="
+echo [2/3] Dang tim Java...
 
 for /r "%DESKTOP%" %%F in (java.exe) do (
-    set "JAVA_FOUND=1"
-    echo [OK] Tim thay Java.
-    echo Dang chay java.exe...
+    echo [OK] Tim thay java.exe
+    echo Dang cai Java...
     start /wait "" "%%F"
     goto JAVA_DONE
 )
 
+echo [WARNING] Khong tim thay java.exe.
+
 :JAVA_DONE
-
-if not defined JAVA_FOUND (
-    echo [WARNING] Khong tim thay java.exe.
-)
-
 echo.
 
 :: ==============================
-:: SET WALLPAPER
+:: WALLPAPER
 :: ==============================
 
 echo [3/3] Dang tim Wall.png...
 
-set "WALL_FOUND="
-
 for /r "%DESKTOP%" %%F in (Wall.png) do (
-    set "WALL_FOUND=1"
-
-    echo [OK] Tim thay Wall.png.
+    echo [OK] Tim thay Wall.png
     echo Dang dat hinh nen...
 
     powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-    "$wall='%%F'; Set-ItemProperty -Path 'HKCU:\Control Panel\Desktop' -Name Wallpaper -Value $wall; Set-ItemProperty -Path 'HKCU:\Control Panel\Desktop' -Name WallpaperStyle -Value '10'; Set-ItemProperty -Path 'HKCU:\Control Panel\Desktop' -Name TileWallpaper -Value '0'; rundll32.exe user32.dll,UpdatePerUserSystemParameters"
+    "Set-ItemProperty -Path 'HKCU:\Control Panel\Desktop' -Name Wallpaper -Value '%%F'; Set-ItemProperty -Path 'HKCU:\Control Panel\Desktop' -Name WallpaperStyle -Value '10'; Set-ItemProperty -Path 'HKCU:\Control Panel\Desktop' -Name TileWallpaper -Value '0'; rundll32.exe user32.dll,UpdatePerUserSystemParameters"
 
     goto WALL_DONE
 )
 
-:WALL_DONE
+echo [WARNING] Khong tim thay Wall.png.
 
-if not defined WALL_FOUND (
-    echo [WARNING] Khong tim thay Wall.png.
-)
+:WALL_DONE
 
 echo.
 echo ==========================================
