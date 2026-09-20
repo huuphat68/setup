@@ -62,15 +62,15 @@ echo.
 :: COPY CONTENTS OF "Setup VPS" TO DESKTOP
 :: ==========================================
 
-if not exist "%TEMP%\Setup VPS" (
-    echo [ERROR] Khong tim thay folder Setup VPS trong ZIP.
+if not exist "%TEMP%\Setup" (
+    echo [ERROR] Khong tim thay folder Setup trong ZIP.
     pause
     exit /b 1
 )
 
 echo Dang dua file ra Desktop...
 
-xcopy "%TEMP%\Setup VPS\*" "%DESKTOP%\" /E /H /R /Y /I >nul
+xcopy "%TEMP%\Setup\*" "%DESKTOP%\" /E /H /R /Y /I >nul
 
 if errorlevel 1 (
     echo.
