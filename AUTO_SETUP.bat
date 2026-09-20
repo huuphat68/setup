@@ -5,6 +5,7 @@ setlocal
 
 set "ZIP=%USERPROFILE%\Downloads\Setup.zip"
 set "DESKTOP=%USERPROFILE%\Desktop"
+set "TEMP=%TEMP%\PHATVPS_SETUP"
 
 cls
 echo ==========================================
@@ -14,7 +15,7 @@ echo.
 
 :: CHECK ZIP
 if not exist "%ZIP%" (
-    echo [ERROR] Khong tim thay Setup.zip
+    echo [ERROR] Khong tim thay Setup.zip trong Downloads.
     pause
     exit /b 1
 )
@@ -22,62 +23,85 @@ if not exist "%ZIP%" (
 echo [OK] Da tim thay Setup.zip
 echo.
 
+:: CLEAN TEMP
+if exist "%TEMP%" (
+    rmdir /s /q "%TEMP%"
+)
+
+mkdir "%TEMP%"
+
 :: ==============================
 :: EXTRACT
 :: ==============================
 
-echo [1/3] Dang giai nen ra Desktop...
+echo [1/3] Dang giai nen...
 
 powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-"Add-Type -AssemblyName System.IO.Compression.FileSystem; [System.IO.Compression.ZipFile]::ExtractToDirectory('%ZIP%', '%DESKTOP%')"
+"Add-Type -AssemblyName System.IO.Compression.FileSystem; [System.IO.Compression.ZipFile]::ExtractToDirectory('%ZIP%', '%TEMP%')"
 
 if errorlevel 1 (
-    echo.
     echo [ERROR] Giai nen that bai.
     pause
     exit /b 1
 )
 
-echo [OK] Giai nen thanh cong.
-echo.
-
 :: ==============================
-:: JAVA
+:: COPY CONTENT TO DESKTOP
 :: ==============================
 
-echo [2/3] Dang tim Java...
+echo Dang dua file ra Desktop...
 
-for /r "%DESKTOP%" %%F in (java.exe) do (
-    echo [OK] Tim thay java.exe
-    echo Dang cai Java...
-    start /wait "" "%%F"
-    goto JAVA_DONE
+if exist "%TEMP%\Setup VPS" (
+
+    xcopy "%TEMP%\Setup VPS\*" "%DESKTOP%\" /E /H /Y /I >nul
+
+) else (
+
+    echo [ERROR] Khong tim thay folder Setup VPS trong ZIP.
+    pause
+    exit /b 1
 )
 
-echo [WARNING] Khong tim thay java.exe.
+rmdir /s /q "%TEMP%"
 
-:JAVA_DONE
+echo [OK] Da dua tat ca file ra Desktop.
 echo.
 
 :: ==============================
-:: WALLPAPER
+:: INSTALL JAVA
 :: ==============================
 
-echo [3/3] Dang tim Wall.png...
+echo [2/3] Dang cai Java...
 
-for /r "%DESKTOP%" %%F in (Wall.png) do (
-    echo [OK] Tim thay Wall.png
-    echo Dang dat hinh nen...
+if exist "%DESKTOP%\Java.exe" (
+
+    echo [OK] Tim thay Java.exe
+    start /wait "" "%DESKTOP%\Java.exe"
+
+) else (
+
+    echo [WARNING] Khong tim thay Java.exe
+)
+
+echo.
+
+:: ==============================
+:: SET WALLPAPER
+:: ==============================
+
+echo [3/3] Dang dat hinh nen...
+
+if exist "%DESKTOP%\wall.png" (
 
     powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-    "Set-ItemProperty -Path 'HKCU:\Control Panel\Desktop' -Name Wallpaper -Value '%%F'; Set-ItemProperty -Path 'HKCU:\Control Panel\Desktop' -Name WallpaperStyle -Value '10'; Set-ItemProperty -Path 'HKCU:\Control Panel\Desktop' -Name TileWallpaper -Value '0'; rundll32.exe user32.dll,UpdatePerUserSystemParameters"
+    "$wall='%DESKTOP%\wall.png'; Set-ItemProperty -Path 'HKCU:\Control Panel\Desktop' -Name Wallpaper -Value $wall; Set-ItemProperty -Path 'HKCU:\Control Panel\Desktop' -Name WallpaperStyle -Value '10'; Set-ItemProperty -Path 'HKCU:\Control Panel\Desktop' -Name TileWallpaper -Value '0'; rundll32.exe user32.dll,UpdatePerUserSystemParameters"
 
-    goto WALL_DONE
+    echo [OK] Da dat hinh nen.
+
+) else (
+
+    echo [WARNING] Khong tim thay wall.png
 )
-
-echo [WARNING] Khong tim thay Wall.png.
-
-:WALL_DONE
 
 echo.
 echo ==========================================
